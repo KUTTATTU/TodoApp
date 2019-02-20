@@ -1,2 +1,2 @@
 # TodoApp
-A todo application backend using nodejs,mongoDB and express
+A backend for todo application using nodejs,mongoDB and express
