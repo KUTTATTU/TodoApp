@@ -3,6 +3,9 @@ const router = express.Router();
 
 const todo_controller = require('../controller/todo.controller');
 
+//Authentication
+router.get('/', todo_controller.todoAuth);
+
 //Get all todos
 router.get('/all', todo_controller.todo_all);
 
