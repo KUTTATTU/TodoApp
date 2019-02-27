@@ -2,9 +2,18 @@ const express = require('express');
 const router = express.Router();
 
 const todo_controller = require('../controller/todo.controller');
-
+var authHelper = require('../helpers/auth');
+var authorize = require('./todo.route.authorize');
+//require('dotenv').config();
 //Authentication
-router.get('/', todo_controller.todoAuth);
+router.get('/basicAuth', todo_controller.todoAuth);
+router.get('/OAuth', function(req, res, next) {
+    signInUrl = authHelper.getAuthUrl();
+    res.end(signInUrl);
+});
+
+router.get('/authorize', authorize.author);
+
 
 //Get all todos
 router.get('/all', todo_controller.todo_all);

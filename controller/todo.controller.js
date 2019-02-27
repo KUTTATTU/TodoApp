@@ -26,7 +26,6 @@ exports.todo_create = function(req, res) {
 
     var todo;
     Todo.Counter.count(function(err, count) {
-        console.log("count");
         if (!err && count === 0) {
             var myobj = new Todo.Counter({ Cid: "todo_id", sequence_value: 0 });
             console.log(myobj);
@@ -77,8 +76,8 @@ exports.todo_create = function(req, res) {
             Todo.Counter.findOne({ Cid: "todo_id" }, function(err, counter) {
                 if (err)
                     console.log("Can't find 'todo_id' ");
-                console.log(counter.sequence_value);
-                addtodo(counter.sequence_value);
+                else
+                    addtodo(counter.sequence_value);
             });
         }
 
@@ -105,7 +104,9 @@ exports.todo_update = function(req, res) {
 
 exports.todo_delete = function(req, res) {
     Todo.Todolist.findOneAndRemove({ taskId: req.params.id }, function(err) {
-        if (err) return next(err);
+        if (err) {
+            console.log(" Delete todo Failed");
+        };
         res.send('Todo deleted successfully!');
     })
 };
