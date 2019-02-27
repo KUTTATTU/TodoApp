@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const credentials = {
     client: {
-        id: "2ee21432-6572-43d7-b64a-b863c87bb205",
-        secret: "zvsVSAO2976xyrlYTE3:;-+",
+        id: process.env.APP_ID,
+        secret: process.env.APP_PASSWORD,
     },
     auth: {
         tokenHost: 'https://login.microsoftonline.com',
@@ -14,8 +14,8 @@ const oauth2 = require('simple-oauth2').create(credentials);
 
 function getAuthUrl() {
     const returnVal = oauth2.authorizationCode.authorizeURL({
-        redirect_uri: "http://localhost:8090/todos/authorize",
-        scope: "openid profile User.Read"
+        redirect_uri: process.env.REDIRECT_URI,
+        scope: process.env.APP_SCOPES
     });
     console.log(`Generated auth url: ${returnVal}`);
     return returnVal;
@@ -26,8 +26,8 @@ function getAuthUrl() {
 async function getTokenFromCode(auth_code) {
     let result = await oauth2.authorizationCode.getToken({
         code: auth_code,
-        redirect_uri: "http://localhost:8090/todos/authorize",
-        scope: "openid profile User.Read"
+        redirect_uri: process.env.REDIRECT_URI,
+        scope: process.env.APP_SCOPES
     });
 
     const token = oauth2.accessToken.create(result);

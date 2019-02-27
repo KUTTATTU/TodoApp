@@ -1,6 +1,26 @@
 const Todo = require('../model/todo.model');
-var auth = require('basic-auth')
+var auth = require('basic-auth');
+var authHelper = require('../helpers/auth');
 var seq;
+
+/* GET /authorize. */
+exports.authorize = async function(req, res, next) {
+    // Get auth code
+    const code = req.query.code;
+    // If code is present, use it
+    if (code) {
+        try {
+            username = await authHelper.getTokenFromCode(code);
+        } catch (error) {
+            res.end('Error exchanging code for token');
+        }
+        if (username)
+            res.end("welcome " + username);
+    } else {
+        // Otherwise complain
+        res.end('Authorization error->Missing code parameter');
+    }
+}
 
 exports.todoAuth = function(req, res) {
     var credentials = auth(req);
