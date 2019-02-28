@@ -2,9 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 const todo_controller = require('../controller/todo.controller');
+var authHelper = require('../helpers/auth');
 
-//Authentication
-router.get('/', todo_controller.todoAuth);
+//Basic Authentication
+router.get('/basicAuth', todo_controller.todoAuth);
+
+//Microsoft Authentication
+router.get('/OAuth', function(req, res, next) {
+    signInUrl = authHelper.getAuthUrl();
+    res.writeHead(301, { Location: signInUrl });
+    res.end();
+
+    //res.end(signInUrl);
+});
+
+router.get('/authorize', todo_controller.authorize);
+
 
 //Get all todos
 router.get('/all', todo_controller.todo_all);
