@@ -1,6 +1,8 @@
 const Todo = require('../model/todo.model');
 var auth = require('basic-auth');
 var authHelper = require('../helpers/auth');
+const jwt = require('jsonwebtoken');
+
 var seq;
 
 /* GET /authorize. */
@@ -10,12 +12,16 @@ exports.authorize = async function(req, res, next) {
     // If code is present, use it
     if (code) {
         try {
-            username = await authHelper.getTokenFromCode(code);
+            token= await authHelper.getTokenFromCode(code);
         } catch (error) {
             res.end('Error exchanging code for token');
         }
-        if (username)
-            res.end("welcome " + username);
+        if (token){
+            const user = jwt.decode(token.token.id_token);
+            req.session.useremail = user.preferred_username
+            res.end('<h1>Name: </h1>' + user.name + '<h2>Mail: </h2>' + user.preferred_username + '<br><a type="button" href="/todos/logout">Logout</a>');
+        }
+        
     } else {
         // Otherwise complain
         res.end('Authorization error->Missing code parameter');
@@ -130,3 +136,16 @@ exports.todo_delete = function(req, res) {
         res.send('Todo deleted successfully!');
     })
 };
+
+exports.todo_logout = function(req, res) {
+    if (req.session) {
+        // delete session object
+        req.session.destroy(function (err) {
+          if (err) {
+            return next(err);
+          } else {
+            return res.redirect('/todos/OAuth');
+          }
+        });
+      }
+}

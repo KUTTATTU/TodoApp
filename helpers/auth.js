@@ -13,6 +13,7 @@ const credentials = {
 const oauth2 = require('simple-oauth2').create(credentials);
 
 function getAuthUrl() {
+    console.log('Generated auth url:');
     const returnVal = oauth2.authorizationCode.authorizeURL({
         redirect_uri: process.env.REDIRECT_URI,
         scope: process.env.APP_SCOPES
@@ -34,11 +35,11 @@ async function getTokenFromCode(auth_code) {
     // console.log('Token created: ', token.token);
 
     // Parse the identity token
-    const user = jwt.decode(token.token.id_token);
-    console.log('Token created for : ', user.name);
+   // const user = jwt.decode(token.token.id_token);
+    //console.log('Token created for : ', user.preferred_username);
 
     //return token.token.access_token;
-    return user.name;
+    return token;
 }
 
 exports.getTokenFromCode = getTokenFromCode;
